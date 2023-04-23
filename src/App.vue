@@ -1,8 +1,6 @@
 <script setup>
 import { onBeforeMount, ref, reactive } from 'vue';
 import PartNames from './components/PartNames.vue';
-import Logo from './components/Logo.vue';
-import WelcomeItem from './components/WelcomeItem.vue';
 
 import IconJoin from './components/icons/IconJoin.vue';
 import IconAddUser from './components/icons/IconAddUser.vue';

@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import WelcomeItem from './WelcomeItem.vue';
 import Logo from './Logo.vue'
+import PartItem from './PartItem.vue';
 
 const props = defineProps(["parts", "icons"]);
 
@@ -27,18 +27,18 @@ function activate(id) {
 
 <template>
 
-<WelcomeItem>
-              <template #icon>
-                <Logo></Logo>
-              </template>
-              <template #heading><h2>Berliner</h2></template>
-          </WelcomeItem>
+<PartItem>
+    <template #icon>
+      <Logo></Logo>
+    </template>
+    <template #heading><h2>Berliner</h2></template>
+</PartItem>
 <div class="h-75 col-sm-12 col-lg-3 border border-light rounded">
-          <WelcomeItem class="btn part" :key="part.name" v-for="(part, index) in data.parts" :text-class="{'text-success':part.IsActive.value, 'part': true}" @click="$emit('sectionChanged', index);activate(index)">
-            <template #icon><component :is="part.icon"></component></template>
-            <template #heading>{{part.name}}</template>
-          
-          </WelcomeItem>
+  <PartItem class="btn part" :key="part.name" v-for="(part, index) in data.parts" :text-class="{'text-success':part.IsActive.value, 'part': true}" @click="$emit('sectionChanged', index);activate(index)">
+    <template #icon><component :is="part.icon"></component></template>
+    <template #heading>{{part.name}}</template>
+  
+  </PartItem>
 
 
 </div>
