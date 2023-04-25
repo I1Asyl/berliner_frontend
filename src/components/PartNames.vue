@@ -4,13 +4,13 @@ import Logo from './Logo.vue'
 import PartItem from './PartItem.vue';
 
 const props = defineProps(["parts", "icons"]);
-
+defineEmits("sectionChanged")
 const data = {
     parts:[], 
 }
 
 for (let i = 0; i < 5; i++) {
-  data.parts.push({name: props.parts[i], icon: props.icons[i], IsActive: ref(false)}) 
+  data.parts.push({name: props.parts[i], icon: props.icons[i], IsActive: ref(false), IsHovered: ref(false)}) 
 }
 
 const active = reactive({
@@ -23,30 +23,28 @@ function activate(id) {
   active.value = id;
   console.log(active.value);
 }
+
+function hover(id) {
+  data.parts[id].IsHovered.value = true;
+  console.log(id);
+}
+
+function unhover(id) {
+  data.parts[id].IsHovered.value = false;
+  
+}
 </script>
 
 <template>
 
-<PartItem>
-    <template #icon>
-      <Logo></Logo>
-    </template>
-    <template #heading><h2>Berliner</h2></template>
-</PartItem>
-<div class="h-75 col-sm-12 col-lg-3 border border-light rounded">
-  <PartItem class="btn part" :key="part.name" v-for="(part, index) in data.parts" :text-class="{'text-success':part.IsActive.value, 'part': true}" @click="$emit('sectionChanged', index);activate(index)">
+
+  <PartItem class="btn" :key="part.name" v-for="(part, index) in data.parts" :text-class="{'text-primary':part.IsActive.value, 'text-success':(part.IsHovered.value && !part.IsActive.value), 'text-secondary':(!part.IsHovered.value && !part.IsActive.value)}" @click="$emit('sectionChanged', index);activate(index)" @mouseover="hover(index)" @mouseout="unhover(index)">
     <template #icon><component :is="part.icon"></component></template>
     <template #heading>{{part.name}}</template>
   
   </PartItem>
 
-
-</div>
-
 </template>
 
 <style>
-.part:hover {
-  color: aquamarine;
-}
 </style>

@@ -6,11 +6,12 @@ const clas = "hala";
 <template>
   <div class="item d-flex">
     <i :class="classes.iconClass" class="align-self-center">
-      <slot name="icon"></slot>
+      <slot name="pfp"></slot>
     </i>
     <div class="details align-self-center">
       <h3 :class="classes.textClass" class="">
-        <slot name="heading"></slot>
+        <slot name="full-name"></slot>
+        <p><slot name="username"></slot></p>
       </h3>
 
     </div>
@@ -19,8 +20,6 @@ const clas = "hala";
 
 <style scoped>
 .item {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   padding-left: 12px;
   display: flex;
 }
@@ -43,7 +42,7 @@ i {
 }
 
 h3 {
-  font-size: 1.4rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--color-heading);
 }

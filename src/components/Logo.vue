@@ -1,3 +1,12 @@
+<script setup>
+import PartItem from './PartItem.vue';
+import IconLogo from './icons/IconLogo.vue';
+</script>
 <template>
-    <img src="https://img.icons8.com/external-tone-royyan-wijaya/64/null/external-berlin-londomak-tone-tone-royyan-wijaya-2.png"/>
+      <PartItem>
+        <template #icon>
+          <IconLogo></IconLogo>
+        </template>
+        <template #heading><h2>Berliner</h2></template>
+      </PartItem>  
 </template>
