@@ -4,7 +4,7 @@ const clas = "hala";
 </script>
 
 <template>
-  <div class="item d-flex">
+  <div class="item d-flex px-3">
     <i :class="classes.iconClass" class="align-self-center">
       <slot name="pfp"></slot>
     </i>
@@ -19,10 +19,7 @@ const clas = "hala";
 </template>
 
 <style scoped>
-.item {
-  padding-left: 12px;
-  display: flex;
-}
+
 
 .details {
   margin-left: 1rem;

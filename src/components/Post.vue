@@ -7,7 +7,7 @@
         <div class="header">
             <slot name="header"></slot>
         </div>
-        <div class="body">
+        <div class="body px-3">
             <span class="content"><slot name="content"></slot></span>
         </div>
         <div class="footer">
@@ -17,7 +17,4 @@
 </template>
 
 <style>
-.post .body{
-    padding-left: 3rem;
-}
 </style>
