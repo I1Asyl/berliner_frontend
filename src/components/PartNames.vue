@@ -4,7 +4,7 @@ import Logo from './Logo.vue'
 import PartItem from './PartItem.vue';
 
 const props = defineProps(["parts", "icons"]);
-defineEmits("sectionChanged")
+defineEmits(["sectionChanged"])
 const data = {
     parts:[], 
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref, reactive } from 'vue';
+import { onBeforeMount, ref, reactive, onMounted, computed } from 'vue';
 import PartNames from './components/PartNames.vue';
 
 import UserProfile from './components/UserProfile.vue';
@@ -14,19 +14,28 @@ import IconUser from './components/icons/IconUser.vue';
 import IconTeams from './components/icons/IconTeams.vue';
 import IconChat from './components/icons/IconChat.vue';
 import Filters from './components/Filters.vue';
+import Login from './components/Login.vue';
+import Registration from './components/Registration.vue';
 
 
 
 const user = ref(0);
+const showLogin = ref(false);
+const showRegistration = ref(false);
 const data = {
   partNames:["My teams", "Join", "Edit","Add user", "Messages"], 
   icons: [IconTeams, IconJoin, IconEdit, IconAddUser, IconChat],
   active: [ref(false), ref(false), ref(false), ref(false), ref(false)],
-  user: ref(0)
+  user: reactive({
+    username: "Not loged in",
+    firstName: "",
+    lastName: "",
+    authorized: false,
+    fullName: computed(() => data.user.firstName + " " + data.user.lastName)
+  })
 }
 
 const active = ref(0);
-
 
 
 
@@ -35,25 +44,60 @@ function activate(id) {
   data.active[id].value = true;
   active.value = id;
 }
-async function getTeams() {
- 
 
-  document.cookie = "username=As";
-
-  const response = await fetch("http://127.0.0.1:8080", {  method: 'GET',
-  credentials: 'include'});
-   const tmp = await response.json();
-   data.user.value = tmp.user;
-   console.log(tmp);
+async function login() {
+  
+  const response = await fetch("http://127.0.0.1:8080/login", {
+  method: 'GET',
+  credentials: 'include'
+});
+const tmp = await response.json();
+   if (tmp.authorized) {
+    data.user.username = tmp.username;
+    data.user.firstName = tmp.fistName;
+    data.user.lastName = tmp.lastName;
+    data.user.authorized = true;
+   }
 }
 
+async function logout() {
+  
+  const response = await fetch("http://127.0.0.1:8080/logout", {
+  method: 'GET',
+  credentials: 'include'
+});
+    data.user.username = "Not loged in";
+    data.user.firstName = "";
+    data.user.lastName = "";
+    data.user.authorized = false;
+}
+
+async function getTeams() {
+  const response = await fetch("http://127.0.0.1:8080", {
+  method: 'GET',
+  credentials: 'include'
+});
+
+}
+
+
+function profile() {
+  if (!data.user.authorized) {
+    showLogin.value = true;
+  }
+}
+
+
 onBeforeMount(() => {
-  getTeams()
+  getTeams();
+
+})
+onMounted(() => {
 })
 </script>
 
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid full-height" >
 
   <div class="row">
     <Logo></Logo>
@@ -67,10 +111,10 @@ onBeforeMount(() => {
       <div class="border border-light border-3 rounded part"><PartNames :parts="data.partNames" :icons="data.icons" @section-changed="activate"></PartNames></div>
 
       <div class="border border-light border-3 rounded part">
-      <UserProfile>
+      <UserProfile class="btn" @click="profile()">
         <template #pfp> <IconUser></IconUser></template>
-        <template #full-name> Hello </template>
-        <template #username> Mr Yerassyl</template>
+        <template #full-name>{{ data.user.fullName }} </template>
+        <template #username>@{{ data.user.username }}</template>
       </UserProfile>
       </div>
     </div>
@@ -100,11 +144,15 @@ onBeforeMount(() => {
     </div>     
   </div>
   </div>
-  
-
+  <Login v-show="showLogin" @sign-up="() => {showLogin = false; showRegistration = true;}" @close="() => {showLogin = false}">
+  </Login>
+  <Registration v-show="showRegistration" @login="() => {showLogin = true; showRegistration = false;}" @close="() => {showRegistration = false}">
+    </Registration>
 </template>
 <style scoped>
 .part {
   margin-bottom: 5rem;
 }
+
+
 </style>

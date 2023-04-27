@@ -1,0 +1,35 @@
+<script setup>
+import Popup from './Popup.vue';
+defineEmits(["login", "close"])
+
+</script>
+<template>
+    <Popup @close="$emit('close')">
+        <template #name> Registration</template>
+        <template #content>
+                <form method="post" class="form-wrapper" action="">
+                    <div class="form-group">
+                        <label for="username">Your username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="first-name">Your username</label>
+                        <input type="text" class="form-control" id="first-name" placeholder="Your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last-name">Your username</label>
+                        <input type="text" class="form-control" id="last-name" placeholder="Your last name">
+                    </div>                    
+
+                    <div class="form-group">
+                        <label for="password">Your password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign up</button>  
+                    <button @click="$emit('login')" class="btn" type="button">Log in</button>
+            </form>
+        </template>
+    </Popup>
+</template>
+
