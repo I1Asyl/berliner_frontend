@@ -45,21 +45,6 @@ function activate(id) {
   active.value = id;
 }
 
-async function login() {
-  
-  const response = await fetch("http://127.0.0.1:8080/login", {
-  method: 'GET',
-  credentials: 'include'
-});
-const tmp = await response.json();
-   if (tmp.authorized) {
-    data.user.username = tmp.username;
-    data.user.firstName = tmp.fistName;
-    data.user.lastName = tmp.lastName;
-    data.user.authorized = true;
-   }
-}
-
 async function logout() {
   
   const response = await fetch("http://127.0.0.1:8080/logout", {
@@ -72,12 +57,14 @@ async function logout() {
     data.user.authorized = false;
 }
 
-async function getTeams() {
+async function main() {
   const response = await fetch("http://127.0.0.1:8080", {
   method: 'GET',
-  credentials: 'include'
-});
-
+  headers: {
+    "Authorization": localStorage.getItem("token"),
+  }
+}).then((response) => response.json())
+.then((json) => {data.user.username = json.username});
 }
 
 
@@ -89,7 +76,7 @@ function profile() {
 
 
 onBeforeMount(() => {
-  getTeams();
+  main();
 
 })
 onMounted(() => {
@@ -111,12 +98,15 @@ onMounted(() => {
       <div class="border border-light border-3 rounded part"><PartNames :parts="data.partNames" :icons="data.icons" @section-changed="activate"></PartNames></div>
 
       <div class="border border-light border-3 rounded part">
-      <UserProfile class="btn" @click="profile()">
+      <UserProfile class="btn">
         <template #pfp> <IconUser></IconUser></template>
         <template #full-name>{{ data.user.fullName }} </template>
         <template #username>@{{ data.user.username }}</template>
       </UserProfile>
+      <button @click="profile()" class="btn btn-primamry"> Alo</button>
+
       </div>
+
     </div>
     <div class="col-sm-12 col-lg-6">
       <Post class="border border-light border-3 rounded pb-3">
