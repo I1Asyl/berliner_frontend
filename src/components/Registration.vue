@@ -15,6 +15,7 @@ async function register() {
     .then((response) => response.json()).then(
         (json) => {localStorage.setItem("token", json.token)}
     );
+    window.location.reload();
 }
 
 function registerFormToJson(id) {

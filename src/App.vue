@@ -58,10 +58,16 @@ async function logout() {
 }
 
 async function main() {
+  let token = "";
+  if (localStorage.hasOwnProperty("token")) {
+    token = localStorage.getItem("token");
+  }
+  console.log(token);
+  console.log("as");
   const response = await fetch("http://127.0.0.1:8080", {
   method: 'GET',
   headers: {
-    "Authorization": localStorage.getItem("token"),
+    "Authorization": token,
   }
 }).then((response) => response.json())
 .then((json) => {data.user.username = json.username});
