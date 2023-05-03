@@ -109,7 +109,7 @@ onMounted(() => {
         <template #full-name>{{ data.user.fullName }} </template>
         <template #username>@{{ data.user.username }}</template>
       </UserProfile>
-      <button @click="profile()" class="btn btn-primamry"> Alo</button>
+      <button @click="profile()" class="btn btn-primary"> Alo</button>
 
       </div>
 

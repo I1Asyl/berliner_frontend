@@ -12,29 +12,66 @@ const form = reactive({
     firstName: '', 
     lastName: '', 
     password: '',
-})
+});
 
-const rules = reactive({
-    username: computed(() => {required}), 
-    email: computed(() => {required}),
-    firstName: computed(() => {required}),
-    lastName: computed(() => {required}),
-    password: computed(() => {required}),
-})
+const errors = reactive({
+    username: '', 
+    email: '',
+    firstName: '', 
+    lastName: '', 
+    password: '',
+});
+
 async function register() {
     const register = await fetch("http://127.0.0.1:8080/signup", {
         method: "POST", 
         body: formToJson()
-    });  
-      
-    const login = await fetch("http://127.0.0.1:8080/login", {
-        method: "POST", 
-        body: formToJson()
     })
-    .then((response) => response.json()).then(
-        (json) => {localStorage.setItem("token", json.token)}
-    );
-    window.location.reload();
+    .then(
+        (response) => {
+            if(response.status === 422) {
+                return response.json();
+            }
+            else {
+                return -1;
+            }
+        }
+    )
+    .then(
+        (json) => {
+            if(json !== -1) {
+                for (let invalid in json) {
+                    errors[invalid] = json[invalid];
+                }
+            }
+            else {
+                fetch("http://127.0.0.1:8080/login", {
+                    method: "POST", 
+                    body: formToJson()
+                })
+                .then(
+                    (response) => {
+                    if (response.status === 200) 
+                        return response.json();
+                    else
+                        return -1;
+                    }
+                )
+                .then(
+                    (json) => {
+                        if(json !== -1){
+                            localStorage.setItem("token", json.token);
+                            window.location.reload();
+
+                        }
+                    }
+                );
+            }
+        }
+    );  
+
+
+
 }
 
 function formToJson(id) {
@@ -56,19 +93,23 @@ function formToJson(id) {
                     <div class="form-group">
                         <label for="username">Your username</label>
                         <input type="text" class="form-control" name="username" v-model="form.username" placeholder="Your username">
+                        <small>{{ errors.username }}</small>
                     </div>
                     <div class="form-group">
                         <label for="email">Your email</label>
                         <input type="text" class="form-control" name="email" v-model="form.email" placeholder="Your email">
+                        <small>{{ errors.email }}</small>
                     </div>
                     <div class="form-group">
                         <label for="first-name">Your first name</label>
                         <input type="text" class="form-control" name="first-name" v-model="form.firstName" placeholder="Your name">
+                        <small>{{ errors.firstName }}</small>
                     </div>
 
                     <div class="form-group">
                         <label for="last-name">Your last name</label>
                         <input type="text" class="form-control" name="last-name" v-model="form.lastName" placeholder="Your last name">
+                        <small>{{ errors.lastName }}</small>
                     </div>                    
 
                     <div class="form-group">
