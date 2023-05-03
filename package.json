@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.2",
+    "@vuelidate/validators": "^2.0.2",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.4",
     "bootstrap-vue": "^2.23.1",
