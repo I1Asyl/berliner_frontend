@@ -6,24 +6,32 @@ const showRegistration = ref(false);
 defineEmits(["sign-up", "close"]);
 
 const form = reactive({
-    username: '', 
-    password: '',
+    teamName: '', 
+    description: '',
 });
 
 const isError = ref(false);
 
 const errors = reactive({
-    username: '', 
-    password: '',
+    teamName: '', 
+    description: '',
 });
 
-function login() {
+function createTeam() {
+
+    let token = "";
+  if (localStorage.hasOwnProperty("token")) {
+    token = "Bearer " + localStorage.getItem("token");
+  }
     for (let err in errors) {
         errors[err] = "";
     }
-    fetch("http://127.0.0.1:8080/login", {
+    fetch("http://127.0.0.1:8080/myTeams", {
                     method: "POST", 
-                    body: formToJson()
+                    body: formToJson(), 
+                    headers: {
+                        "Authorization": token
+                    }
                 })
                 .then(
                     (response) => {
@@ -35,21 +43,20 @@ function login() {
                 )
                 .then(
                     (json) => {
-                        if(json !== -1){
-                            localStorage.setItem("token", json.token);
-                            window.location.reload();
+                        if(json === -1){
+                            isError.value = true;
                         }
                         else {
-                            isError.value = true;
+                            window.location.reload();
                         }
                     }
                 );
 }
 
-function formToJson() {
+function formToJson(id) {
     return JSON.stringify({
-        username: form.username,
-        password: form.password
+        teamName: form.teamName,
+        description: form.description
      })
 }  
 
@@ -59,18 +66,17 @@ function formToJson() {
         <template #name> Login</template>
         <template #content>
                 <form method="post" class="form-wrapper" action="">
-                    <small v-if="isError">Username or password are not correct</small>
+                    <small v-if="isError">Team name is not correct</small>
 
                     <div class="form-group">
-                        <label for="username">Your username</label>
-                        <input v-model="form.username" type="text" class="form-control" id="username" placeholder="Your username">
+                        <label for="team-name">Team name</label>
+                        <input v-model="form.teamName" type="text" class="form-control" placeholder="Team name">
                     </div>
                     <div class="form-group">
-                        <label for="password">Your password</label>
-                        <input v-model="form.password" type="password" class="form-control" id="password" placeholder="Your password">
+                        <label for="password">Team description</label>
+                        <textarea class="form-control" v-model="form.description" rows="4"></textarea>
                     </div>
-                    <button type="button" @click="login()" class="btn btn-primary">Login</button>  
-                    <button @click="$emit('sign-up')" class="btn" type="button">Sign up</button> 
+                    <button type="button" @click="createTeam()" class="btn btn-primary">Create team</button>  
             </form>
         </template>
     </Popup>

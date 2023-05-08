@@ -23,6 +23,9 @@ const errors = reactive({
 });
 
 async function register() {
+    for (let err in errors) {
+        errors[err] = "";
+    }
     const register = await fetch("http://127.0.0.1:8080/signup", {
         method: "POST", 
         body: formToJson()
@@ -74,7 +77,7 @@ async function register() {
 
 }
 
-function formToJson(id) {
+function formToJson() {
     return JSON.stringify({
         username: form.username,
         email: form.email,
@@ -115,6 +118,7 @@ function formToJson(id) {
                     <div class="form-group">
                         <label for="password">Your password</label>
                         <input type="password" class="form-control" name="password" v-model="form.password" placeholder="Your password">
+                        <small>{{ errors.password }}</small>
                     </div>
                     <button type="button" @click="register" class="btn btn-primary">Sign up</button>  
                     <button @click="$emit('login')" class="btn" type="button">Log in</button>
