@@ -1,20 +1,18 @@
 <script setup>
 import {ref, reactive} from 'vue'
-import Registration from './Registration.vue';
 import Popup from './Popup.vue';
-const showRegistration = ref(false);
-defineEmits(["sign-up", "close"]);
+
 
 const form = reactive({
     teamName: '', 
-    description: '',
+    teamDescription: '',
 });
 
 const isError = ref(false);
 
 const errors = reactive({
     teamName: '', 
-    description: '',
+    teamDescription: '',
 });
 
 function createTeam() {
@@ -56,7 +54,7 @@ function createTeam() {
 function formToJson(id) {
     return JSON.stringify({
         teamName: form.teamName,
-        description: form.description
+        teamDescription: form.teamDescription
      })
 }  
 
@@ -74,7 +72,7 @@ function formToJson(id) {
                     </div>
                     <div class="form-group">
                         <label for="password">Team description</label>
-                        <textarea class="form-control" v-model="form.description" rows="4"></textarea>
+                        <textarea class="form-control" v-model="form.teamDescription" rows="4"></textarea>
                     </div>
                     <button type="button" @click="createTeam()" class="btn btn-primary">Create team</button>  
             </form>

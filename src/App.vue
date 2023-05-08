@@ -109,15 +109,13 @@ onMounted(() => {
   {{ data.active }}
   <div class="container-fluid full-height" >
 
-  <div class="row">
-    <Logo></Logo>
 
-    </div>
+
 
     <div class="row">
 
     <div class="col-sm-12 col-lg-3 d-flex flex-column justify-content-around">
-
+      <Logo></Logo>
       <div class="border border-light border-3 rounded part">
         <PartNames :active="data.active" :parts="data.partNames" :icons="data.icons" ></PartNames>
       </div>
@@ -131,12 +129,13 @@ onMounted(() => {
       <div>
         <button @click="profile()" class="my-2 mx-2 btn btn-primary" v-text="change"></button>
       </div>
-
       </div>
-
     </div>
-    <Feed v-if="data.active[0].value"/>
-    <MyTeams v-if="data.active[1].value"/>
+
+    <Feed :user="data.user" v-if="data.active[0].value"/>
+    <MyTeams :user="data.user" v-if="data.active[1].value"/>
+
+
   </div>
   </div>
 

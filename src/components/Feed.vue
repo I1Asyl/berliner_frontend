@@ -4,9 +4,29 @@ import IconUser from './icons/IconUser.vue';
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
+const props = defineProps(['user'])
+
 </script>
 <template>
+
      <div class="col-sm-12 col-lg-6">
+
+      <Post class="border border-light border-3 rounded pb-3">
+        <template #header> 
+          <UserProfile>
+            <template #pfp> <IconUser></IconUser></template>
+            <template #full-name> {{ props.user.username }} </template>
+            <template #username> {{props.user.firstName}} {{props.user.lastName}} </template>
+          </UserProfile>          
+        </template>
+        <template #content> 
+          <form class="form-wrapper">
+            <textarea class="form-control"></textarea>
+            <div class="d-flex justify-content-end"><button class="btn btn-primary mt-3 mr-3">Post</button></div>
+          </form>
+        </template>
+        </Post>
+
       <Post class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>

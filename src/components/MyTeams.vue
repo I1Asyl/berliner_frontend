@@ -1,13 +1,15 @@
 
 <script setup>
-import IconUser from './icons/IconUser.vue';
+import IconTeams from './icons/IconTeams.vue';
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
-import Filters from './Filters.vue';
+
 import {onBeforeMount, reactive, ref} from 'vue'
 import CreateTeam from './CreateTeam.vue';
 const data = ref("")
 const teamForm = ref(false);
+
+const props = defineProps(["user"])
 
 onBeforeMount(() => {
     getTeams();
@@ -39,8 +41,8 @@ async function getTeams() {
       <Post class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconUser></IconUser></template>
-            <template #full-name> Hello </template>
+            <template #pfp> <IconTeams></IconTeams></template>
+            <template #full-name> {{ props.user.username }} </template>
             <template #username> Mr Yerassyl</template>
           </UserProfile>          
         </template>
