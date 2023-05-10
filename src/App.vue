@@ -31,6 +31,7 @@ const data = {
   icons: [IconFeed, IconTeams ,IconFriends, IconJoin, IconChat],
   active: [ref(true), ref(false), ref(false), ref(false), ref(false)],
   user: reactive({
+    id: 0,
     username: "Not loged in",
     firstName: "",
     lastName: "",
@@ -53,6 +54,7 @@ async function logout() {
     data.user.username = "Not loged in";
     data.user.firstName = "";
     data.user.lastName = "";
+    data.user.id = 0;
     data.user.authorized = false;
     localStorage.removeItem("token")
 }
@@ -82,6 +84,9 @@ async function main() {
     if(json !== -1) {
       console.log(json);
       data.user.username = json.username;
+      data.user.firstName = json.firstName;
+      data.user.lastName = json.lastName;
+      data.user.id = json.id;
       data.user.authorized = true;
     }
   });

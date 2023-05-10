@@ -6,6 +6,28 @@ import Post from './Post.vue';
 import Filters from './Filters.vue';
 const props = defineProps(['user'])
 
+const content = ref("")
+
+async function post() {
+  fetch("http://127.0.0.1:8080/post", 
+  { 
+    method: 'POST', 
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    },
+    body: formToJson()
+  }
+  )
+}
+
+function formToJson() {
+    return JSON.stringify({
+      content: content, 
+      authorType: "user", 
+      authorId: props.user.id
+     })
+}  
+
 </script>
 <template>
 
@@ -21,7 +43,7 @@ const props = defineProps(['user'])
         </template>
         <template #content> 
           <form class="form-wrapper">
-            <textarea class="form-control"></textarea>
+            <textarea v-model="content" class="form-control"></textarea>
             <div class="d-flex justify-content-end"><button class="btn btn-primary mt-3 mr-3">Post</button></div>
           </form>
         </template>
