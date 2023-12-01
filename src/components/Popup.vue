@@ -8,7 +8,7 @@ defineEmits(["close"])
             <div class="col-sm-8 col-md-6 col-lg-4 border border-light bg-light rounded-top">
                 <div class="d-flex justify-content-between py-3">
                 <span class="h3"><slot name="name"></slot></span>
-                <btn class="btn" @click="$emit('close')"><IconClose></IconClose></btn>
+                <button class="btn" @click="$emit('close')"><IconClose></IconClose></button>
                 </div>
                 <slot name="content"></slot>
             </div>

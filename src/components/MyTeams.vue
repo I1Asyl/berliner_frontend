@@ -21,7 +21,7 @@ async function getTeams() {
         token = "Bearer " + localStorage.getItem("token");
     } 
     console.log(token);   
-    fetch("http://127.0.0.1:8080/myTeams",{ 
+    fetch("http://127.0.0.1:8080/teams",{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
@@ -53,8 +53,8 @@ async function getTeams() {
       <div class="border border-light border-3 rounded px-3 py-3">
         <h3>Teams</h3>
         <ul>
-            <li v-for="teams in data.teams">
-              <button class="btn">{{ teams.TeamName }}</button>
+            <li v-for="teams in data">
+              <button class="btn">{{ teams.teamName }}</button>
             </li>
         </ul>
         <button class="btn btn-primary" @click="teamForm=true;">Create a team</button>

@@ -24,7 +24,7 @@ function createTeam() {
     for (let err in errors) {
         errors[err] = "";
     }
-    fetch("http://127.0.0.1:8080/myTeams", {
+    fetch("http://127.0.0.1:8080/teams", {
                     method: "POST", 
                     body: formToJson(), 
                     headers: {
