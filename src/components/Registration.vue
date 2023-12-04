@@ -4,6 +4,7 @@ import { required } from '@vuelidate/validators'
 
 import { computed, reactive } from 'vue';
 import Popup from './Popup.vue';
+import { UNREF } from '@vue/compiler-core';
 defineEmits(["login", "close"])
 
 const form = reactive({
@@ -26,28 +27,21 @@ async function register() {
     for (let err in errors) {
         errors[err] = "";
     }
-    const register = await fetch("http://127.0.0.1:8080/signup", {
+    fetch("http://127.0.0.1:8080/signup", {
         method: "POST", 
         body: formToJson()
     })
     .then(
         (response) => {
             if(response.status === 422) {
-                return response.json();
-            }
-            else {
-                return -1;
-            }
-        }
-    )
-    .then(
-        (json) => {
-            if(json !== -1) {
-                for (let invalid in json) {
+                for (let invalid in responce.json()) {
                     errors[invalid] = json[invalid];
                 }
             }
-            else {
+            else if(response.status === 500) {
+                window.alert("Server is not currently not responding, try again later please")
+            }
+            else if(response.status === 200){
                 fetch("http://127.0.0.1:8080/login", {
                     method: "POST", 
                     body: formToJson()
@@ -71,7 +65,8 @@ async function register() {
                 );
             }
         }
-    );  
+    )
+ 
 
 
 

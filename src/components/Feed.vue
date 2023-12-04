@@ -87,8 +87,8 @@ onBeforeMount(() => getTeams());
         <template #header> 
           <UserProfile>
             <template #pfp> <IconUser></IconUser></template>
-            <template #full-name> {{ post.user_id }} </template>
-            <template #username> Mr Yerassyl</template>
+            <template #full-name> {{ post.username }} </template>
+            <template #username>{{ post.firstName }} {{ post.lastName }}</template>
           </UserProfile>          
         </template>
         <template #content>{{ post.content }}</template>

@@ -64,7 +64,7 @@ async function main() {
   if (localStorage.hasOwnProperty("token")) {
     token = "Bearer " + localStorage.getItem("token");
   }
-
+  
   fetch("http://127.0.0.1:8080", {
   method: 'GET',
   headers: {
@@ -89,6 +89,8 @@ async function main() {
       data.user.id = json.id;
       data.user.authorized = true;
     }
+  }).catch((error) => {
+    window.alert("Server is not currently not responding or internet connection is unstable");
   });
 }
 
