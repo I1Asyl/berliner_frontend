@@ -111,15 +111,11 @@ onMounted(() => {
 </script>
 
 <template>
-  {{ data.active }}
   <div class="container-fluid full-height" >
-
-
-
 
     <div class="row">
 
-    <div class="col-sm-12 col-lg-3 d-flex flex-column justify-content-around">
+    <div class="col-sm-12 col-lg-3 d-flex flex-column justify-content-around vh-100 position-sticky">
       <Logo></Logo>
       <div class="border border-light border-3 rounded part">
         <PartNames :active="data.active" :parts="data.partNames" :icons="data.icons" ></PartNames>
