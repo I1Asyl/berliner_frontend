@@ -2,15 +2,18 @@
 <script setup>
 import {onBeforeMount, ref} from 'vue';
 import IconUser from './icons/IconUser.vue';
+import IconTeams from './icons/IconTeams.vue';
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
 const props = defineProps(['user'])
 
 const content = ref("")
-const posts = ref("")
+const teamPosts = ref()
+const userPosts = ref()
 
-async function getTeams() {
+
+async function getUserPosts() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
@@ -25,7 +28,29 @@ async function getTeams() {
     }).then((response) => {return response.json()})
     .then(
         (json) => {
-            posts.value = json;
+            userPosts.value = json;
+            console.log(json);
+            return;
+        }
+    );
+}
+
+async function getTeamPosts() {
+    let token = "";
+    if (localStorage.hasOwnProperty("token")) {
+        token = "Bearer " + localStorage.getItem("token");
+    } 
+    fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
+    author: "team",
+    }),{ 
+        method: 'GET', 
+        headers: {
+            "Authorization": token,
+        }
+    }).then((response) => {return response.json()})
+    .then(
+        (json) => {
+            teamPosts.value = json;
             console.log(json);
             return;
         }
@@ -52,7 +77,7 @@ function formToJson() {
       authorType: "user", 
      })
 }  
-onBeforeMount(() => getTeams());
+onBeforeMount(() => {getUserPosts(); getTeamPosts();});
 </script>
 <template>
 
@@ -83,7 +108,7 @@ onBeforeMount(() => getTeams());
         </template>
         <template #content> The world has lost a true giant today. Harry Belafonte was a barrier breaker who helped reshape our world through his civil rights advocacy, his music, and his acting. May he rest in peace.</template>
         </Post>
-        <Post v-for="post in posts" class="border border-light border-3 rounded pb-3">
+        <Post v-for="post in userPosts" class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
             <template #pfp> <IconUser></IconUser></template>
@@ -93,12 +118,22 @@ onBeforeMount(() => getTeams());
         </template>
         <template #content>{{ post.content }}</template>
         </Post>
+        <Post v-for="post in teamPosts" class="border border-light border-3 rounded pb-3">
+        <template #header> 
+          <UserProfile>
+            <template #pfp> <IconTeams></IconTeams></template>
+            <template #full-name> {{ post.teamName }} </template>
+          </UserProfile>          
+        </template>
+        <template #content>{{ post.content }}</template>
+        
+        </Post>    
     </div>   
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
         <h3>Filters</h3>
-          <Filters :options="['Important', 'Usual']" id="Importance">
-            <template #header>Importance</template>
+          <Filters :options="['User posts', 'Team posts']" id="Type">
+            <template #header>Type</template>
           </Filters>
           <Filters :options="['Public', 'Private']" id="Status">
             <template #header>Public</template>
