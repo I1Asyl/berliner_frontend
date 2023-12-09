@@ -1,12 +1,12 @@
 <script setup>
-const args = defineProps(["options", "id"])
+const args = defineProps(["options", "id"]);
+defineEmits(["change"]);
 </script>
 <template>
     <div class="mb-3">
     <legend><slot name="header"></slot></legend>
-    <div class="form-check" v-for="option in args.options">
-      <input class="form-check-input" type="radio" :id="option" :name="args.id" :value="option"
-             checked>
+    <div class="form-check" v-for="(option, i) in args.options">
+      <input class="form-check-input" type="radio" :id="option" :name="args.id" :value="option" :checked="i == 0" @change="$emit('change', option)">
       <label class="form-check-label" :for="option">{{ option }}</label>
     </div>
     </div>

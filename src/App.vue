@@ -19,7 +19,7 @@ import Login from './components/Login.vue';
 import Registration from './components/Registration.vue';
 import Feed from './components/Feed.vue';
 import MyTeams from './components/MyTeams.vue';
-
+import SomethingNew from './components/SomethingNew.vue';
 
 
 const user = ref(0);
@@ -27,7 +27,7 @@ const showLogin = ref(false);
 const showRegistration = ref(false);
 
 const data = {
-  partNames:["Feed", "My teams" ,"Friends","Join a team", "Messages"], 
+  partNames:["Feed", "My teams" ,"Something new","Join a team", "Messages"], 
   icons: [IconFeed, IconTeams ,IconFriends, IconJoin, IconChat],
   active: [ref(true), ref(false), ref(false), ref(false), ref(false)],
   user: reactive({
@@ -137,7 +137,7 @@ onMounted(() => {
 
     <Feed :user="data.user" v-if="data.active[0].value"/>
     <MyTeams :user="data.user" v-if="data.active[1].value"/>
-
+    <SomethingNew :user="data.user" v-if="data.active[2].value"/>
 
   </div>
   </div>

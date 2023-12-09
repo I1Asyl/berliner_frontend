@@ -10,6 +10,7 @@ const teams = ref(0);
 const chosenTeam = ref(0);
 const teamForm = ref(false);
 const content = ref("");
+const contentType = ref("private");
 const posts = ref();
 const props = defineProps(["user"]);
 
@@ -83,6 +84,7 @@ const chosenTeamDescription = computed(() => {
 function formToJson() {
     return JSON.stringify({
       content: content.value, 
+      isPublic: (contentType.value === "public"),
       authorType: "team", 
      });
 }  
@@ -131,7 +133,19 @@ async function getTeams() {
         <template #content> 
           <form class="form-wrapper">
             <textarea v-model="content" class="form-control"></textarea>
-            <div class="d-flex justify-content-end"><button @click="post" class="btn btn-primary mt-3 mr-3">Post</button></div>
+            <div class="d-flex justify-content-between">
+              <div class="mt-3 d-flex"> 
+                <div class="form-check m-1">
+                <input v-model="contentType" class="form-check-input" type="radio" id="private" name="privacy" value="private" checked>
+                <label class="form-check-label" for="private">Private</label>
+                </div>
+                <div class="form-check m-1">
+                <input v-model="contentType" class="form-check-input" type="radio" id="public" name="privacy" value="public">
+                <label class="form-check-label" for="public">Public</label>
+                </div>
+              </div>
+              <button @click="post" class="btn btn-primary mt-3 mr-3">Post</button>
+            </div>
           </form>
         </template>
         </Post>  
