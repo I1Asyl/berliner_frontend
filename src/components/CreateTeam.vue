@@ -15,7 +15,7 @@ const errors = reactive({
     teamDescription: '',
 });
 
-function createTeam() {
+async function createTeam() {
 
     let token = "";
   if (localStorage.hasOwnProperty("token")) {
@@ -24,31 +24,19 @@ function createTeam() {
     for (let err in errors) {
         errors[err] = "";
     }
-    fetch("http://127.0.0.1:8080/teams", {
-                    method: "POST", 
-                    body: formToJson(), 
-                    headers: {
-                        "Authorization": token
-                    }
-                })
-                .then(
-                    (response) => {
-                    if (response.status === 200) 
-                        return response.json();
-                    else
-                        return -1;
-                    }
-                )
-                .then(
-                    (json) => {
-                        if(json === -1){
-                            isError.value = true;
-                        }
-                        else {
-                            window.location.reload();
-                        }
-                    }
-                );
+    const responce = await fetch("http://127.0.0.1:8080/teams", {
+        method: "POST", 
+        body: formToJson(), 
+        headers: {
+            "Authorization": token
+        }
+    })
+    if (responce.status === 200) {
+        window.location.reload();
+    } 
+    else {
+        isError.value = true;
+    }
 }
 
 function formToJson(id) {

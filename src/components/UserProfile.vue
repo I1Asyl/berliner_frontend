@@ -15,7 +15,11 @@ const clas = "hala";
       </h3>
 
     </div>
+    <div class="align-self-center mx-2">
+      <slot name="button"> </slot>
+    </div>
   </div>
+
 </template>
 
 <style scoped>

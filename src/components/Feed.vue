@@ -36,21 +36,17 @@ async function getUserPosts() {
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
-    fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
-    author: "user",
-    }),{ 
+    const response = await fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
+      author: "user",
+      }),
+      { 
         method: 'GET', 
         headers: {
-            "Authorization": token,
+          "Authorization": token,
         }
-    }).then((response) => {return response.json()})
-    .then(
-        (json) => {
-            userPosts.value = json;
-            console.log(json);
-            return;
-        }
-    );
+    });
+    userPosts.value = await response.json();
+
 }
 
 async function getTeamPosts() {
@@ -58,24 +54,18 @@ async function getTeamPosts() {
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
-    fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
+    const response = await fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
     author: "team",
     }),{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
-    }).then((response) => {return response.json()})
-    .then(
-        (json) => {
-            teamPosts.value = json;
-            console.log(json);
-            return;
-        }
-    );
+    });
+    teamPosts.value = await response.json();
 }
 
-async function post() {
+function post() {
   fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
     id: props.user.id,
 }), 

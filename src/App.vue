@@ -64,34 +64,26 @@ async function main() {
   if (localStorage.hasOwnProperty("token")) {
     token = "Bearer " + localStorage.getItem("token");
   }
-  
-  fetch("http://127.0.0.1:8080", {
-  method: 'GET',
-  headers: {
-    "Authorization":  token,
-  }
-}).then(
-  (response) => {
+  try{
+    const response = await fetch("http://127.0.0.1:8080", {
+      method: 'GET',
+      headers: {
+        "Authorization":  token,
+      }
+    })
+    const json = await response.json();
     if (response.status === 200) {
-      return response.json();
+        data.user.username = json.username;
+        data.user.firstName = json.firstName;
+        data.user.lastName = json.lastName;
+        data.user.id = json.id;
+        data.user.authorized = true;
     }
-    else if (response.status === 401) {
-      return -1;
-    }
-  })
-.then(
-  (json) => {
-    if(json !== -1) {
-      console.log(json);
-      data.user.username = json.username;
-      data.user.firstName = json.firstName;
-      data.user.lastName = json.lastName;
-      data.user.id = json.id;
-      data.user.authorized = true;
-    }
-  }).catch((error) => {
+  }
+  catch(error) {
     window.alert("Server is not currently not responding or internet connection is unstable");
-  });
+    console.log(error);
+  }
 }
 
 function profile() {
@@ -128,9 +120,12 @@ onMounted(() => {
         <template #pfp> <IconUser></IconUser></template>
         <template #full-name>{{ data.user.fullName }} </template>
         <template #username>@{{ data.user.username }}</template>
+        <template #button>
+          <button @click="profile()" class="my-2 mx-2 btn btn-primary" v-text="change"></button>
+        </template>
       </UserProfile>
       <div>
-        <button @click="profile()" class="my-2 mx-2 btn btn-primary" v-text="change"></button>
+        
       </div>
       </div>
     </div>

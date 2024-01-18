@@ -38,21 +38,15 @@ async function getPosts() {
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
-    fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
+    const response = await fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
     author: "team",
     }),{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
-    }).then((response) => {return response.json()})
-    .then(
-        (json) => {
-            posts.value = json;
-            console.log(json);
-            return;
-        }
-    );
+    })
+    posts.value = await response.json();
 }
 
 const chosenTeamName = computed(() => {
@@ -94,18 +88,13 @@ async function getTeams() {
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
-    fetch("http://127.0.0.1:8080/teams",{ 
+    const response = await fetch("http://127.0.0.1:8080/teams",{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
-    }).then((response) => {return response.json()})
-    .then(
-        (json) => {
-            teams.value = json;
-            return;
-        }
-    );
+    })
+    teams.value = await response.json();
 }
 
 </script>
