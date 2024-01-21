@@ -1,6 +1,7 @@
 
 <script setup>
 import IconUser from './icons/IconUser.vue';
+import IconTeams from './icons/IconTeams.vue'
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
@@ -61,8 +62,20 @@ async function getTeamPosts() {
     teamPosts.value = await response.json();
 }
 
-async function follow() {
-  
+async function follow(followType, followed) {
+  let token = "";
+  if (localStorage.hasOwnProperty("token")) {
+      token = "Bearer " + localStorage.getItem("token");
+  } 
+  const response = await fetch("http://127.0.0.1:8080/follow?" + new URLSearchParams({
+    follow: followType, 
+    followed: followed,
+  }), {
+    method: 'POST', 
+    headers: {
+      "Authorization": token,
+    }
+  })
 }
 
 // async function getTeams() {
@@ -107,7 +120,7 @@ async function follow() {
             <template #username>{{ post.firstName }} {{ post.lastName }} </template>
 
             <template #button>
-              <button @click="profile()" class="my-2 mx-2 btn btn-primary">Follow</button>
+              <button @click="() => {follow('user', post.username);}" class="my-2 mx-2 btn btn-primary">Follow</button>
             </template>
           </UserProfile>          
         </template>
@@ -118,6 +131,9 @@ async function follow() {
           <UserProfile>
             <template #pfp> <IconTeams></IconTeams></template>
             <template #full-name> {{ post.teamName }} </template>
+            <template #button>
+              <button @click="() => {follow('team', post.teamName);}" class="my-2 mx-2 btn btn-primary">Follow</button>
+            </template>
           </UserProfile>          
         </template>
         <template #content>{{ post.content }}</template>

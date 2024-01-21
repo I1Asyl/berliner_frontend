@@ -14,10 +14,9 @@ import IconTeams from './components/icons/IconTeams.vue';
 import IconChat from './components/icons/IconChat.vue';
 import IconFeed from './components/icons/IconFeed.vue';
 
-import Filters from './components/Filters.vue';
 import Login from './components/Login.vue';
 import Registration from './components/Registration.vue';
-import Feed from './components/Feed.vue';
+import Following from './components/Following.vue';
 import MyTeams from './components/MyTeams.vue';
 import SomethingNew from './components/SomethingNew.vue';
 
@@ -27,7 +26,7 @@ const showLogin = ref(false);
 const showRegistration = ref(false);
 
 const data = {
-  partNames:["Feed", "My teams" ,"Something new","Join a team", "Messages"], 
+  partNames:["Following", "My teams" ,"Something new","Join a team", "Messages"], 
   icons: [IconFeed, IconTeams ,IconFriends, IconJoin, IconChat],
   active: [ref(true), ref(false), ref(false), ref(false), ref(false)],
   user: reactive({
@@ -71,17 +70,19 @@ async function main() {
         "Authorization":  token,
       }
     })
-    const json = await response.json();
     if (response.status === 200) {
         data.user.username = json.username;
         data.user.firstName = json.firstName;
         data.user.lastName = json.lastName;
         data.user.id = json.id;
         data.user.authorized = true;
+    } 
+    else if (response.status === 401) {
+      showLogin.value = true;
     }
   }
   catch(error) {
-    window.alert("Server is not currently not responding or internet connection is unstable");
+    //window.alert("Server is not currently not responding or internet connection is unstable");
     console.log(error);
   }
 }
@@ -130,7 +131,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <Feed :user="data.user" v-if="data.active[0].value"/>
+    <Following :user="data.user" v-if="data.active[0].value"/>
     <MyTeams :user="data.user" v-if="data.active[1].value"/>
     <SomethingNew :user="data.user" v-if="data.active[2].value"/>
 
