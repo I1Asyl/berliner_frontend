@@ -2,7 +2,7 @@
 <script setup>
 import {onBeforeMount, ref} from 'vue';
 import IconUser from './icons/IconUser.vue';
-import IconTeams from './icons/IconTeams.vue';
+import IconPseudonyms from './icons/IconPseudonyms.vue';
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
@@ -10,12 +10,12 @@ const props = defineProps(['user']);
 const postType = ref("user");
 const postVis = ref("public");
 const content = ref("");
-const teamPosts = ref();
+const pseudonymPosts = ref();
 const userPosts = ref();
 const contentType = ref("private");
 function changePostType(option) {
-  if (option === "Team posts") {
-    postType.value = "team";
+  if (option === "Pseudonym posts") {
+    postType.value = "pseudonym";
   } 
   else {
     postType.value = "user";
@@ -49,20 +49,20 @@ async function getUserPosts() {
 
 }
 
-async function getTeamPosts() {
+async function getPseudonymPosts() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
     const response = await fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
-    author: "team",
+    author: "pseudonym",
     }),{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
     });
-    teamPosts.value = await response.json();
+    pseudonymPosts.value = await response.json();
 }
 
 function post() {
@@ -86,7 +86,7 @@ function formToJson() {
       authorType: "user", 
      })
 }  
-onBeforeMount(() => {getUserPosts(); getTeamPosts();});
+onBeforeMount(() => {getUserPosts(); getPseudonymPosts();});
 </script>
 <template>
 
@@ -139,11 +139,11 @@ onBeforeMount(() => {getUserPosts(); getTeamPosts();});
         </template>
         <template #content>{{ post.content }} </template>
         </Post>
-        <Post v-show="postType === `team` && ((`public` === postVis && post.isPublic) || (`private` === postVis && !post.isPublic))" v-for="post in teamPosts" class="border border-light border-3 rounded pb-3">
+        <Post v-show="postType === `pseudonym` && ((`public` === postVis && post.isPublic) || (`private` === postVis && !post.isPublic))" v-for="post in pseudonymPosts" class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconTeams></IconTeams></template>
-            <template #full-name> {{ post.teamName }} </template>
+            <template #pfp> <IconPseudonyms></IconPseudonyms></template>
+            <template #full-name> {{ post.pseudonymName }} </template>
           </UserProfile>          
         </template>
         <template #content>{{ post.content }}</template>
@@ -153,7 +153,7 @@ onBeforeMount(() => {getUserPosts(); getTeamPosts();});
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
         <h3>Filters</h3>
-          <Filters :options="['User posts', 'Team posts']" id="Type" @change="changePostType">
+          <Filters :options="['User posts', 'Pseudonym posts']" id="Type" @change="changePostType">
             <template #header>Type</template>
           </Filters>
           <Filters :options="['Public', 'Private']" id="Status" @change="changePostVis">

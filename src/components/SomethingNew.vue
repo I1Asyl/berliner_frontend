@@ -1,20 +1,20 @@
 
 <script setup>
 import IconUser from './icons/IconUser.vue';
-import IconTeams from './icons/IconTeams.vue'
+import IconPseudonyms from './icons/IconPseudonyms.vue'
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
 import {onActivated, onBeforeMount, reactive, ref} from 'vue'
-import CreateTeam from './CreateTeam.vue';
+import CreatePseudonym from './CreatePseudonym.vue';
 const postType = ref("user");
 const userPosts = ref();
-const teamPosts = ref();
+const pseudonymPosts = ref();
 const followedToUser = ref();
 
 onBeforeMount(() => {
     getUserPosts();
-    getTeamPosts();
+    getPseudonymPosts();
 })
 
 onActivated(() => {
@@ -22,8 +22,8 @@ onActivated(() => {
 })
 
 function changePostType(option) {
-  if (option === "Team posts") {
-    postType.value = "team";
+  if (option === "Pseudonym posts") {
+    postType.value = "pseudonym";
   } 
   else {
     postType.value = "user";
@@ -46,20 +46,20 @@ async function getUserPosts() {
     userPosts.value = await response.json();
 }
 
-async function getTeamPosts() {
+async function getPseudonymPosts() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
     const response = await fetch("http://127.0.0.1:8080/newPost?" + new URLSearchParams({
-    author: "team",
+    author: "pseudonym",
     }),{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
     })
-    teamPosts.value = await response.json();
+    pseudonymPosts.value = await response.json();
 }
 
 async function follow(followType, followed) {
@@ -75,10 +75,11 @@ async function follow(followType, followed) {
     headers: {
       "Authorization": token,
     }
-  })
+  });
+  window.location.reload();
 }
 
-// async function getTeams() {
+// async function getPseudonyms() {
 //     let token = "";
 //     if (localStorage.hasOwnProperty("token")) {
 //         token = "Bearer " + localStorage.getItem("token");
@@ -126,13 +127,13 @@ async function follow(followType, followed) {
         </template>
         <template #content>{{ post.content }} </template>
         </Post>      
-        <Post v-show="postType === `team`" v-for="post in teamPosts" class="border border-light border-3 rounded pb-3">
+        <Post v-show="postType === `pseudonym`" v-for="post in pseudonymPosts" class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconTeams></IconTeams></template>
-            <template #full-name> {{ post.teamName }} </template>
+            <template #pfp> <IconPseudonyms></IconPseudonyms></template>
+            <template #full-name> {{ post.pseudonymName }} </template>
             <template #button>
-              <button @click="() => {follow('team', post.teamName);}" class="my-2 mx-2 btn btn-primary">Follow</button>
+              <button @click="() => {follow('pseudonym', post.pseudonymName);}" class="my-2 mx-2 btn btn-primary">Follow</button>
             </template>
           </UserProfile>          
         </template>
@@ -143,7 +144,7 @@ async function follow(followType, followed) {
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
         <h3>Filters</h3>
-          <Filters :options="['User posts', 'Team posts']" id="Type" @change="changePostType">
+          <Filters :options="['User posts', 'Pseudonym posts']" id="Type" @change="changePostType">
             <template #header>Type</template>
           </Filters>
       </div>

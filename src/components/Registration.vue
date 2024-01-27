@@ -27,45 +27,36 @@ async function register() {
     for (let err in errors) {
         errors[err] = "";
     }
-    fetch("http://127.0.0.1:8080/signup", {
+    const responce = await fetch("http://127.0.0.1:8080/signup", {
         method: "POST", 
         body: formToJson()
     })
-    .then(
-        (response) => {
-            if(response.status === 422) {
-                for (let invalid in responce.json()) {
-                    errors[invalid] = json[invalid];
-                }
-            }
-            else if(response.status === 500) {
-                window.alert("Server is not currently not responding, try again later please")
-            }
-            else if(response.status === 200){
-                fetch("http://127.0.0.1:8080/login", {
-                    method: "POST", 
-                    body: formToJson()
-                })
-                .then(
-                    (response) => {
-                    if (response.status === 200) 
-                        return response.json();
-                    else
-                        return -1;
-                    }
-                )
-                .then(
-                    (json) => {
-                        if(json !== -1){
-                            localStorage.setItem("token", json.token);
-                            window.location.reload();
+    if(responce.status === 422) {
+        const json = await responce.json();
+        for (let invalid in json) {
+            errors[invalid] = json[invalid];
+        }        
+    } 
+    else if (responce.status === 500) {
+        window.alert("Server is not currently not responding, try again later please")
+    }
+    else if(response.status === 200){
+        const resp = await fetch("http://127.0.0.1:8080/login", {
+            method: "POST", 
+            body: formToJson()
+        })
 
-                        }
-                    }
-                );
+        if (resp.status === 200) {
+            const js = await resp.responce();
+            if(js !== -1){
+                localStorage.setItem("token", json.token);
+                window.location.reload();
+
             }
         }
-    )
+    }
+
+
  
 
 
@@ -85,7 +76,7 @@ function formToJson() {
 </script>
 <template>
     <Popup @close="$emit('close')">
-        <template #name> Registration</template>
+        <template #name> Registration </template>
         <template #content>
                 <form method="post" class="form-wrapper">
                     <div class="form-group">

@@ -4,18 +4,18 @@ import Popup from './Popup.vue';
 
 
 const form = reactive({
-    teamName: '', 
-    teamDescription: '',
+    pseudonymName: '', 
+    pseudonymDescription: '',
 });
 
 const isError = ref(false);
 
 const errors = reactive({
-    teamName: '', 
-    teamDescription: '',
+    pseudonymName: '', 
+    pseudonymDescription: '',
 });
 
-async function createTeam() {
+async function createPseudonym() {
 
     let token = "";
   if (localStorage.hasOwnProperty("token")) {
@@ -24,7 +24,7 @@ async function createTeam() {
     for (let err in errors) {
         errors[err] = "";
     }
-    const responce = await fetch("http://127.0.0.1:8080/teams", {
+    const responce = await fetch("http://127.0.0.1:8080/pseudonyms", {
         method: "POST", 
         body: formToJson(), 
         headers: {
@@ -41,28 +41,28 @@ async function createTeam() {
 
 function formToJson(id) {
     return JSON.stringify({
-        teamName: form.teamName,
-        teamDescription: form.teamDescription
+        pseudonymName: form.pseudonymName,
+        pseudonymDescription: form.pseudonymDescription
      })
 }  
 
 </script>
 <template>
     <Popup @close="$emit('close')">
-        <template #name> Login</template>
+        <template #name>Create a pseudonym</template>
         <template #content>
                 <form method="post" class="form-wrapper" action="">
-                    <small v-if="isError">Team name is not correct</small>
+                    <small v-if="isError">Pseudonym name is not correct</small>
 
                     <div class="form-group">
-                        <label for="team-name">Team name</label>
-                        <input v-model="form.teamName" type="text" class="form-control" placeholder="Team name">
+                        <label for="pseudonym-name">Pseudonym name</label>
+                        <input v-model="form.pseudonymName" type="text" class="form-control" placeholder="Pseudonym name">
                     </div>
                     <div class="form-group">
-                        <label for="password">Team description</label>
-                        <textarea class="form-control" v-model="form.teamDescription" rows="4"></textarea>
+                        <label for="password">Pseudonym description</label>
+                        <textarea class="form-control" v-model="form.pseudonymDescription" rows="4"></textarea>
                     </div>
-                    <button type="button" @click="createTeam()" class="btn btn-primary">Create team</button>  
+                    <button type="button" @click="createPseudonym()" class="btn btn-primary">Create pseudonym</button>  
             </form>
         </template>
     </Popup>

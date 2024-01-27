@@ -10,14 +10,14 @@ import Logo from './components/Logo.vue';
 import IconJoin from './components/icons/IconJoin.vue';
 import IconFriends from './components/icons/IconFriends.vue';
 import IconUser from './components/icons/IconUser.vue';
-import IconTeams from './components/icons/IconTeams.vue';
+import IconPseudonyms from './components/icons/IconPseudonyms.vue';
 import IconChat from './components/icons/IconChat.vue';
 import IconFeed from './components/icons/IconFeed.vue';
 
 import Login from './components/Login.vue';
 import Registration from './components/Registration.vue';
 import Following from './components/Following.vue';
-import MyTeams from './components/MyTeams.vue';
+import MyPseudonyms from './components/MyPseudonyms.vue';
 import SomethingNew from './components/SomethingNew.vue';
 
 
@@ -26,8 +26,8 @@ const showLogin = ref(false);
 const showRegistration = ref(false);
 
 const data = {
-  partNames:["Following", "My teams" ,"Something new","Join a team", "Messages"], 
-  icons: [IconFeed, IconTeams ,IconFriends, IconJoin, IconChat],
+  partNames:["Following", "My pseudonyms" ,"Something new"], 
+  icons: [IconFeed, IconPseudonyms ,IconFriends],
   active: [ref(true), ref(false), ref(false), ref(false), ref(false)],
   user: reactive({
     id: 0,
@@ -70,7 +70,9 @@ async function main() {
         "Authorization":  token,
       }
     })
+    
     if (response.status === 200) {
+        const json = await response.json();
         data.user.username = json.username;
         data.user.firstName = json.firstName;
         data.user.lastName = json.lastName;
@@ -79,7 +81,7 @@ async function main() {
     } 
     else if (response.status === 401) {
       showLogin.value = true;
-    }
+    } 
   }
   catch(error) {
     //window.alert("Server is not currently not responding or internet connection is unstable");
@@ -96,7 +98,9 @@ function profile() {
   }
 }
 
-
+function loginError() {
+  window.alert("You have to be logged in to use this website")
+}
 onBeforeMount(() => {
   main();
 
@@ -107,15 +111,15 @@ onMounted(() => {
 
 <template>
   <div class="container-fluid full-height" >
-
     <div class="row">
 
-    <div class="col-sm-12 col-lg-3 d-flex flex-column justify-content-around vh-100 position-sticky">
-      <Logo></Logo>
-      <div class="border border-light border-3 rounded part">
-        <PartNames :active="data.active" :parts="data.partNames" :icons="data.icons" ></PartNames>
+    <div class="col-sm-12 col-lg-3 d-flex flex-column justify-content-between vh-100 position-sticky">
+      <div>
+        <Logo></Logo>
+        <div class="border border-light border-3 rounded part">
+          <PartNames :active="data.active" :parts="data.partNames" :icons="data.icons" ></PartNames>
+        </div>
       </div>
-
       <div class="border border-light border-3 rounded part d-flex justify-content-between">
       <UserProfile>
         <template #pfp> <IconUser></IconUser></template>
@@ -132,15 +136,15 @@ onMounted(() => {
     </div>
 
     <Following :user="data.user" v-if="data.active[0].value"/>
-    <MyTeams :user="data.user" v-if="data.active[1].value"/>
+    <MyPseudonyms :user="data.user" v-if="data.active[1].value"/>
     <SomethingNew :user="data.user" v-if="data.active[2].value"/>
 
   </div>
   </div>
 
-  <Login v-show="showLogin" @sign-up="() => {showLogin = false; showRegistration = true;}" @close="() => {showLogin = false}">
+  <Login v-show="showLogin" @sign-up="() => {showLogin = false; showRegistration = true;}" @close="() => {loginError();}">
   </Login>
-  <Registration v-show="showRegistration" @login="() => {showLogin = true; showRegistration = false;}" @close="() => {showRegistration = false}">
+  <Registration v-show="showRegistration" @login="() => {showLogin = true; showRegistration = false;}" @close="() => {loginError();}">
     </Registration>
 </template>
 <style scoped>

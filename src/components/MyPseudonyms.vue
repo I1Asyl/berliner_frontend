@@ -1,27 +1,27 @@
 
 <script setup>
-import IconTeams from './icons/IconTeams.vue';
+import IconPseudonyms from './icons/IconPseudonyms.vue';
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 
 import {onBeforeMount, computed, ref} from 'vue'
-import CreateTeam from './CreateTeam.vue';
-const teams = ref(0);
-const chosenTeam = ref(0);
-const teamForm = ref(false);
+import CreatePseudonym from './CreatePseudonym.vue';
+const pseudonyms = ref(0);
+const chosenPseudonym = ref(0);
+const pseudonymForm = ref(false);
 const content = ref("");
 const contentType = ref("private");
 const posts = ref();
 const props = defineProps(["user"]);
 
 onBeforeMount(() => {
-    getTeams();
+    getPseudonyms();
     getPosts();
 })
 
 async function post() {
   fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
-    id: chosenTeam.value,
+    id: chosenPseudonym.value,
 }), 
   { 
     method: 'POST', 
@@ -39,7 +39,7 @@ async function getPosts() {
         token = "Bearer " + localStorage.getItem("token");
     } 
     const response = await fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
-    author: "team",
+    author: "pseudonym",
     }),{ 
         method: 'GET', 
         headers: {
@@ -49,25 +49,25 @@ async function getPosts() {
     posts.value = await response.json();
 }
 
-const chosenTeamName = computed(() => {
-  if(chosenTeam.value === 0 || teams.value === 0) {
-    return "Team is not chosen";
+const chosenPseudonymName = computed(() => {
+  if(chosenPseudonym.value === 0 || pseudonyms.value === 0) {
+    return "Pseudonym is not chosen";
   }
-  for (var team in teams.value) {
+  for (var pseudonym in pseudonyms.value) {
     
-    if (teams.value[team].id === chosenTeam.value) {
-      return teams.value[team].teamName;
+    if (pseudonyms.value[pseudonym].id === chosenPseudonym.value) {
+      return pseudonyms.value[pseudonym].pseudonymName;
     }
   }
 })
 
-const chosenTeamDescription = computed(() => {
-  if(chosenTeam === 0 || teams.value === 0) {
+const chosenPseudonymDescription = computed(() => {
+  if(chosenPseudonym === 0 || pseudonyms.value === 0) {
     return "";
   }
-  for (var team in teams.value) {
-    if (teams.value[team].id === chosenTeam.value) {
-      return teams.value[team].teamDescription;
+  for (var pseudonym in pseudonyms.value) {
+    if (pseudonyms.value[pseudonym].id === chosenPseudonym.value) {
+      return pseudonyms.value[pseudonym].pseudonymDescription;
     }
   }
 })
@@ -79,22 +79,22 @@ function formToJson() {
     return JSON.stringify({
       content: content.value, 
       isPublic: (contentType.value === "public"),
-      authorType: "team", 
+      authorType: "pseudonym", 
      });
 }  
 
-async function getTeams() {
+async function getPseudonyms() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
-    const response = await fetch("http://127.0.0.1:8080/teams",{ 
+    const response = await fetch("http://127.0.0.1:8080/pseudonyms",{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
     })
-    teams.value = await response.json();
+    pseudonyms.value = await response.json();
 }
 
 </script>
@@ -105,18 +105,18 @@ async function getTeams() {
       <Post class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconTeams></IconTeams></template>
-            <template #full-name> {{ chosenTeamName }} </template>
+            <template #pfp> <IconPseudonyms></IconPseudonyms></template>
+            <template #full-name> {{ chosenPseudonymName }} </template>
           </UserProfile>          
         </template>
-        <template #content>Team description: {{ chosenTeamDescription }}  </template>
+        <template #content>Pseudonym description: {{ chosenPseudonymDescription }}  </template>
         
         </Post>
       <Post  class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconTeams></IconTeams></template>
-            <template #full-name> {{ chosenTeamName }} </template>
+            <template #pfp> <IconPseudonyms></IconPseudonyms></template>
+            <template #full-name> {{ chosenPseudonymName }} </template>
           </UserProfile>          
         </template>
         <template #content> 
@@ -141,8 +141,8 @@ async function getTeams() {
         <Post v-for="post in posts" class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconTeams></IconTeams></template>
-            <template #full-name> {{ post.teamName }} </template>
+            <template #pfp> <IconPseudonyms></IconPseudonyms></template>
+            <template #full-name> {{ post.pseudonymName }} </template>
           </UserProfile>          
         </template>
         <template #content>{{ post.content }}</template>
@@ -152,14 +152,14 @@ async function getTeams() {
     
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
-        <h3>Choose a team to post</h3>
+        <h3>Choose a pseudonym to post</h3>
         <ul>
-            <li v-for="(team, id) in teams">
-              <button @click="chosenTeam = team.id" class="btn">{{ team.teamName }}</button>
+            <li v-for="(pseudonym, id) in pseudonyms">
+              <button @click="chosenPseudonym = pseudonym.id" class="btn">{{ pseudonym.pseudonymName }}</button>
             </li>
         </ul>
-        <button class="btn btn-primary" @click="teamForm=true;">Create a team</button>
+        <button class="btn btn-primary" @click="pseudonymForm=true;">Create a pseudonym</button>
       </div>
     </div>    
-    <CreateTeam @close="teamForm=false" v-if="teamForm"></CreateTeam>
+    <CreatePseudonym @close="pseudonymForm=false" v-if="pseudonymForm"></CreatePseudonym>
     </template>

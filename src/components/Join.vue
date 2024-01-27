@@ -5,21 +5,21 @@ import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
 import {onBeforeMount, reactive, ref} from 'vue'
-import CreateTeam from './CreateTeam.vue';
+import CreatePseudonym from './CreatePseudonym.vue';
 const data = ref("")
-const teamForm = ref(false);
+const pseudonymForm = ref(false);
 
 onBeforeMount(() => {
-    getTeams();
+    getPseudonyms();
 })
 
-async function getTeams() {
+async function getPseudonyms() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
     console.log(token);   
-    fetch("http://127.0.0.1:8080/myTeams",{ 
+    fetch("http://127.0.0.1:8080/myPseudonyms",{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
@@ -49,13 +49,13 @@ async function getTeams() {
     </div>   
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
-        <h3>Teams</h3>
+        <h3>Pseudonyms</h3>
         <ul>
-            <li v-for="teams in data.teams">{{ teams.TeamName }}</li>
+            <li v-for="pseudonyms in data.pseudonyms">{{ pseudonyms.PseudonymName }}</li>
         </ul>
-        <button class="btn btn-primary" @click="teamForm=true;">Create a team</button>
+        <button class="btn btn-primary" @click="pseudonymForm=true;">Create a pseudonym</button>
       </div>
     </div>    
-    {{ teamForm.value }}
-    <CreateTeam @close="teamForm=false" v-if="teamForm"></CreateTeam>
+    {{ pseudonymForm.value }}
+    <CreatePseudonym @close="pseudonymForm=false" v-if="pseudonymForm"></CreatePseudonym>
     </template>
