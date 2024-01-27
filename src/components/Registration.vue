@@ -40,16 +40,15 @@ async function register() {
     else if (responce.status === 500) {
         window.alert("Server is not currently not responding, try again later please")
     }
-    else if(response.status === 200){
+    else if (responce.status === 200){
         const resp = await fetch("http://127.0.0.1:8080/login", {
             method: "POST", 
             body: formToJson()
         })
-
         if (resp.status === 200) {
-            const js = await resp.responce();
+            const js = await resp.json();
             if(js !== -1){
-                localStorage.setItem("token", json.token);
+                localStorage.setItem("token", js.token);
                 window.location.reload();
 
             }
