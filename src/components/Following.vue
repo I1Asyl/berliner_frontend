@@ -81,6 +81,22 @@ function post() {
   )
 }
 
+async function deletePost(authorType, postId) {
+  const response = await fetch("http://127.0.0.1:8080/post", 
+  { 
+    method: 'DELETE',
+    body: JSON.stringify({
+      id: postId,
+      authorType: authorType,
+    }),
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    },
+  }
+  );
+  window.location.reload();
+}
+
 async function unfollow(followType, followed) {
   let token = "";
   if (localStorage.hasOwnProperty("token")) {
@@ -154,11 +170,11 @@ onBeforeMount(() => {getUserPosts(); getPseudonymPosts();});
         <template #header> 
           <UserProfile>
             <template #pfp> <IconUser></IconUser></template>
-            <template #full-name> {{ post.username }} </template>
+            <template #full-name> {{ post.username }} {{ post.id }} </template>
             <template #username>{{ post.firstName }} {{ post.lastName }}</template>
             <template #button>
               <button v-if="post.username !== user.username" @click="() => {unfollow('user', post.username); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
-              <button v-if="post.username === user.username" @click="() => {unfollow('user', post.username); }" class="my-2 mx-2 btn btn-danger">Delete post</button>
+              <button v-if="post.username === user.username" @click="() => {deletePost('user', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>
             </template>
           </UserProfile>          
         </template>
@@ -169,6 +185,10 @@ onBeforeMount(() => {getUserPosts(); getPseudonymPosts();});
           <UserProfile>
             <template #pfp> <IconPseudonyms></IconPseudonyms></template>
             <template #full-name> {{ post.pseudonymName }} </template>
+            <template #button>
+              <button v-if="post.pseudonymLeaderId !== user.id" @click="() => {unfollow('pseudonym', post.pseudonymName); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
+              <button v-if="post.pseudonymLeaderId === user.id" @click="() => {deletePost('pseudonym', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>            
+            </template>
           </UserProfile>          
         </template>
         <template #content>{{ post.content }}</template>
