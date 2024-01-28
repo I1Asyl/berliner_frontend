@@ -70,7 +70,7 @@ function formToJson() {
                         <input v-model="form.password" type="password" class="form-control" id="password" placeholder="Your password">
                     </div>
                     <button type="button" @click="login()" class="btn btn-primary">Login</button>  
-                    <button @click="$emit('sign-up')" class="btn" type="button">Sign up</button> 
+                    <button @click="$emit('sign-up')" class="btn btn-light" type="button">Sign up</button> 
             </form>
         </template>
     </Popup>

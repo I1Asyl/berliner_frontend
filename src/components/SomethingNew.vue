@@ -69,13 +69,16 @@ async function follow(followType, followed) {
   } 
   const response = await fetch("http://127.0.0.1:8080/follow?" + new URLSearchParams({
     follow: followType, 
-    followed: followed,
   }), {
+    body: JSON.stringify({
+      username: followed,
+    }),
     method: 'POST', 
     headers: {
       "Authorization": token,
     }
   });
+  window.location.reload();
 }
 
 // async function getPseudonyms() {
@@ -120,7 +123,7 @@ async function follow(followType, followed) {
             <template #username>{{ post.firstName }} {{ post.lastName }} </template>
 
             <template #button>
-              <button @click="() => {follow('user', post.username); window.location.reload();}" class="my-2 mx-2 btn btn-primary">Follow</button>
+              <button @click="() => {follow('user', post.username); }" class="my-2 mx-2 btn btn-primary">Follow</button>
             </template>
           </UserProfile>          
         </template>

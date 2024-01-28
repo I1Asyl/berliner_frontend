@@ -6,6 +6,7 @@ import IconPseudonyms from './icons/IconPseudonyms.vue';
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
+
 const props = defineProps(['user']);
 const postType = ref("user");
 const postVis = ref("public");
@@ -13,6 +14,7 @@ const content = ref("");
 const pseudonymPosts = ref();
 const userPosts = ref();
 const contentType = ref("private");
+
 function changePostType(option) {
   if (option === "Pseudonym posts") {
     postType.value = "pseudonym";
@@ -79,6 +81,25 @@ function post() {
   )
 }
 
+async function unfollow(followType, followed) {
+  let token = "";
+  if (localStorage.hasOwnProperty("token")) {
+      token = "Bearer " + localStorage.getItem("token");
+  } 
+  const response = await fetch("http://127.0.0.1:8080/follow?" + new URLSearchParams({
+    follow: followType, 
+  }), {
+    body: JSON.stringify({
+      username: followed,
+    }),
+    method: 'DELETE', 
+    headers: {
+      "Authorization": token,
+    }
+  });
+  window.location.reload();
+}
+
 function formToJson() {
     return JSON.stringify({
       content: content.value, 
@@ -135,6 +156,10 @@ onBeforeMount(() => {getUserPosts(); getPseudonymPosts();});
             <template #pfp> <IconUser></IconUser></template>
             <template #full-name> {{ post.username }} </template>
             <template #username>{{ post.firstName }} {{ post.lastName }}</template>
+            <template #button>
+              <button v-if="post.username !== user.username" @click="() => {unfollow('user', post.username); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
+              <button v-if="post.username === user.username" @click="() => {unfollow('user', post.username); }" class="my-2 mx-2 btn btn-danger">Delete post</button>
+            </template>
           </UserProfile>          
         </template>
         <template #content>{{ post.content }} </template>

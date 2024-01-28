@@ -106,7 +106,7 @@ function formToJson() {
                         <small>{{ errors.password }}</small>
                     </div>
                     <button type="button" @click="register" class="btn btn-primary">Sign up</button>  
-                    <button @click="$emit('login')" class="btn" type="button">Log in</button>
+                    <button @click="$emit('login')" class="btn btn-light" type="button">Log in</button>
             </form>
         </template>
     </Popup>
