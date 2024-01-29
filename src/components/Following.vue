@@ -184,10 +184,10 @@ onBeforeMount(() => {getUserPosts(); getChannelPosts();});
         <template #header> 
           <UserProfile>
             <template #pfp> <IconChannels></IconChannels></template>
-            <template #full-name> {{ post.channelName }} </template>
+            <template #full-name> {{ post.name }} </template>
             <template #button>
-              <button v-if="post.channelLeaderId !== user.id" @click="() => {unfollow('channel', post.channelName); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
-              <button v-if="post.channelLeaderId === user.id" @click="() => {deletePost('channel', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>            
+              <button v-if="post.leaderId !== user.id" @click="() => {unfollow('channel', post.name); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
+              <button v-if="post.leaderId === user.id" @click="() => {deletePost('channel', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>            
             </template>
           </UserProfile>          
         </template>

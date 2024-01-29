@@ -4,15 +4,15 @@ import Popup from './Popup.vue';
 
 
 const form = reactive({
-    channelName: '', 
-    channelDescription: '',
+    name: '', 
+    description: '',
 });
 
 const isError = ref(false);
 
 const errors = reactive({
-    channelName: '', 
-    channelDescription: '',
+    name: '', 
+    description: '',
 });
 
 async function createChannel() {
@@ -41,8 +41,8 @@ async function createChannel() {
 
 function formToJson(id) {
     return JSON.stringify({
-        channelName: form.channelName,
-        channelDescription: form.channelDescription
+        name: form.name,
+        description: form.description
      })
 }  
 
@@ -56,11 +56,11 @@ function formToJson(id) {
 
                     <div class="form-group">
                         <label for="channel-name">Channel name</label>
-                        <input v-model="form.channelName" type="text" class="form-control" placeholder="Channel name">
+                        <input v-model="form.name" type="text" class="form-control" placeholder="Channel name">
                     </div>
                     <div class="form-group">
                         <label for="password">Channel description</label>
-                        <textarea class="form-control" v-model="form.channelDescription" rows="4"></textarea>
+                        <textarea class="form-control" v-model="form.description" rows="4"></textarea>
                     </div>
                     <button type="button" @click="createChannel()" class="btn btn-primary">Create channel</button>  
             </form>

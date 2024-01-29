@@ -56,7 +56,7 @@ const chosenChannelName = computed(() => {
   for (var channel in channels.value) {
     
     if (channels.value[channel].id === chosenChannel.value) {
-      return channels.value[channel].channelName;
+      return channels.value[channel].name;
     }
   }
 })
@@ -67,7 +67,7 @@ const chosenChannelDescription = computed(() => {
   }
   for (var channel in channels.value) {
     if (channels.value[channel].id === chosenChannel.value) {
-      return channels.value[channel].channelDescription;
+      return channels.value[channel].description;
     }
   }
 })
@@ -142,7 +142,7 @@ async function getChannels() {
         <template #header> 
           <UserProfile>
             <template #pfp> <IconChannels></IconChannels></template>
-            <template #full-name> {{ post.channelName }} </template>
+            <template #full-name> {{ post.name }} </template>
           </UserProfile>          
         </template>
         <template #content>{{ post.content }}</template>
@@ -155,7 +155,7 @@ async function getChannels() {
         <h3>Choose a channel to post</h3>
         <ul>
             <li v-for="(channel, id) in channels">
-              <button @click="chosenChannel = channel.id" class="btn">{{ channel.channelName }}</button>
+              <button @click="chosenChannel = channel.id" class="btn">{{ channel.name }}</button>
             </li>
         </ul>
         <button class="btn btn-primary" @click="channelForm=true;">Create a channel</button>

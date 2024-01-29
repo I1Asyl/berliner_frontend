@@ -133,9 +133,9 @@ async function follow(followType, followed) {
         <template #header> 
           <UserProfile>
             <template #pfp> <IconChannels></IconChannels></template>
-            <template #full-name> {{ post.channelName }} </template>
+            <template #full-name> {{ post.name }} </template>
             <template #button>
-              <button @click="() => {follow('channel', post.channelName);}" class="my-2 mx-2 btn btn-primary">Follow</button>
+              <button @click="() => {follow('channel', post.name);}" class="my-2 mx-2 btn btn-primary">Follow</button>
             </template>
           </UserProfile>          
         </template>
