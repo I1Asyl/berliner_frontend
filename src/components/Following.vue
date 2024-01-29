@@ -156,25 +156,15 @@ onBeforeMount(() => {getUserPosts(); getChannelPosts();});
           </form>
         </template>
         </Post>
-      <Post class="border border-light border-3 rounded pb-3">
-        <template #header> 
-          <UserProfile>
-            <template #pfp> <IconUser></IconUser></template>
-            <template #full-name> Hello </template>
-            <template #username> Mr Yerassyl</template>
-          </UserProfile>          
-        </template>
-        <template #content> The world has lost a true giant today. Harry Belafonte was a barrier breaker who helped reshape our world through his civil rights advocacy, his music, and his acting. May he rest in peace.</template>
-        </Post>
         <Post v-show="postType === `user` && ((`public` === postVis && post.isPublic) || (`private` === postVis && !post.isPublic))" v-for="post in userPosts" class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
             <template #pfp> <IconUser></IconUser></template>
-            <template #full-name> {{ post.username }} {{ post.id }} </template>
+            <template #full-name> {{ post.username }}</template>
             <template #username>{{ post.firstName }} {{ post.lastName }}</template>
             <template #button>
               <button v-if="post.username !== user.username" @click="() => {unfollow('user', post.username); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
-              <button v-if="post.username === user.username" @click="() => {deletePost('user', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>
+              <button v-if="post.username === user.username" @click="() => {deletePost('user', post.id); }" class="my-2 mx-2 btn btn-danger">Delete a post</button>
             </template>
           </UserProfile>          
         </template>
@@ -187,7 +177,6 @@ onBeforeMount(() => {getUserPosts(); getChannelPosts();});
             <template #full-name> {{ post.name }} </template>
             <template #button>
               <button v-if="post.leaderId !== user.id" @click="() => {unfollow('channel', post.name); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
-              <button v-if="post.leaderId === user.id" @click="() => {deletePost('channel', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>            
             </template>
           </UserProfile>          
         </template>

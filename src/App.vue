@@ -96,6 +96,7 @@ function profile() {
   else {
     logout();
   }
+  window.location.reload();
 }
 
 function loginError() {
@@ -126,7 +127,7 @@ onMounted(() => {
         <template #full-name>{{ data.user.fullName }} </template>
         <template #username>@{{ data.user.username }}</template>
         <template #button>
-          <button @click="profile()" class="my-2 mx-2 btn btn-primary" v-text="change"></button>
+          <button @click="profile" class="my-2 mx-2 btn btn-primary" v-text="change"></button>
         </template>
       </UserProfile>
       <div>

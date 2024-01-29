@@ -8,6 +8,8 @@ const form = reactive({
     description: '',
 });
 
+const props = defineProps(['user']);
+
 const isError = ref(false);
 
 const errors = reactive({
@@ -41,7 +43,7 @@ async function createChannel() {
 
 function formToJson(id) {
     return JSON.stringify({
-        name: form.name,
+        name: (props.user.username + '/' + form.name),
         description: form.description
      })
 }  
@@ -62,7 +64,7 @@ function formToJson(id) {
                         <label for="password">Channel description</label>
                         <textarea class="form-control" v-model="form.description" rows="4"></textarea>
                     </div>
-                    <button type="button" @click="createChannel()" class="btn btn-primary">Create channel</button>  
+                    <button type="button" @click="createChannel" class="btn btn-primary">Create a channel</button>  
             </form>
         </template>
     </Popup>

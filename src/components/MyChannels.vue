@@ -20,6 +20,10 @@ onBeforeMount(() => {
 })
 
 async function post() {
+  if(chosenChannelName.value === "Channel is not chosen"){ 
+    window.alert("Channel is not chosen");
+    return;
+  }
   fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
     id: chosenChannel.value,
 }), 
@@ -38,9 +42,7 @@ async function getPosts() {
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
-    const response = await fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
-    author: "channel",
-    }),{ 
+    const response = await fetch("http://127.0.0.1:8080/myPost?",{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
@@ -97,6 +99,39 @@ async function getChannels() {
     channels.value = await response.json();
 }
 
+async function deleteChannel() {
+  let token = "";
+    if (localStorage.hasOwnProperty("token")) {
+        token = "Bearer " + localStorage.getItem("token");
+    } 
+    const response = await fetch("http://127.0.0.1:8080/channels",{ 
+        method: 'DELETE', 
+        body: JSON.stringify({
+            id: chosenChannel.value,
+        }),
+        headers: {
+            "Authorization": token,
+        }
+    })  
+    window.location.reload();
+}
+
+async function deletePost(authorType, postId) {
+  const response = await fetch("http://127.0.0.1:8080/post", 
+  { 
+    method: 'DELETE',
+    body: JSON.stringify({
+      id: postId,
+      authorType: authorType,
+    }),
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+    },
+  }
+  );
+  window.location.reload();
+}
+
 </script>
 <template>
 
@@ -107,6 +142,9 @@ async function getChannels() {
           <UserProfile>
             <template #pfp> <IconChannels></IconChannels></template>
             <template #full-name> {{ chosenChannelName }} </template>
+            <template #button>
+              <button v-if="!(chosenChannel === 0 || channels.value === 0)" @click="deleteChannel" class="my-2 mx-2 btn btn-danger">Delete channel</button>            
+            </template>
           </UserProfile>          
         </template>
         <template #content>Channel description: {{ chosenChannelDescription }}  </template>
@@ -117,6 +155,7 @@ async function getChannels() {
           <UserProfile>
             <template #pfp> <IconChannels></IconChannels></template>
             <template #full-name> {{ chosenChannelName }} </template>
+
           </UserProfile>          
         </template>
         <template #content> 
@@ -143,6 +182,9 @@ async function getChannels() {
           <UserProfile>
             <template #pfp> <IconChannels></IconChannels></template>
             <template #full-name> {{ post.name }} </template>
+            <template #button>
+              <button v-if="post.leaderId === user.id" @click="() => {deletePost('channel', post.id); }" class="my-2 mx-2 btn btn-danger">Delete a post</button>            
+            </template>            
           </UserProfile>          
         </template>
         <template #content>{{ post.content }}</template>
@@ -161,5 +203,5 @@ async function getChannels() {
         <button class="btn btn-primary" @click="channelForm=true;">Create a channel</button>
       </div>
     </div>    
-    <CreateChannel @close="channelForm=false" v-if="channelForm"></CreateChannel>
+    <CreateChannel :user="props.user" @close="channelForm=false" v-if="channelForm"></CreateChannel>
     </template>
