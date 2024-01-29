@@ -1,20 +1,20 @@
 
 <script setup>
 import IconUser from './icons/IconUser.vue';
-import IconPseudonyms from './icons/IconPseudonyms.vue'
+import IconChannels from './icons/IconChannels.vue'
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
 import {onActivated, onBeforeMount, reactive, ref} from 'vue'
-import CreatePseudonym from './CreatePseudonym.vue';
+import CreateChannel from './CreateChannel.vue';
 const postType = ref("user");
 const userPosts = ref();
-const pseudonymPosts = ref();
+const channelPosts = ref();
 const followedToUser = ref();
 
 onBeforeMount(() => {
     getUserPosts();
-    getPseudonymPosts();
+    getChannelPosts();
 })
 
 onActivated(() => {
@@ -22,8 +22,8 @@ onActivated(() => {
 })
 
 function changePostType(option) {
-  if (option === "Pseudonym posts") {
-    postType.value = "pseudonym";
+  if (option === "Channel posts") {
+    postType.value = "channel";
   } 
   else {
     postType.value = "user";
@@ -46,20 +46,20 @@ async function getUserPosts() {
     userPosts.value = await response.json();
 }
 
-async function getPseudonymPosts() {
+async function getChannelPosts() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
     const response = await fetch("http://127.0.0.1:8080/newPost?" + new URLSearchParams({
-    author: "pseudonym",
+    author: "channel",
     }),{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
     })
-    pseudonymPosts.value = await response.json();
+    channelPosts.value = await response.json();
 }
 
 async function follow(followType, followed) {
@@ -81,7 +81,7 @@ async function follow(followType, followed) {
   window.location.reload();
 }
 
-// async function getPseudonyms() {
+// async function getChannels() {
 //     let token = "";
 //     if (localStorage.hasOwnProperty("token")) {
 //         token = "Bearer " + localStorage.getItem("token");
@@ -129,13 +129,13 @@ async function follow(followType, followed) {
         </template>
         <template #content>{{ post.content }} </template>
         </Post>      
-        <Post v-show="postType === `pseudonym`" v-for="post in pseudonymPosts" class="border border-light border-3 rounded pb-3">
+        <Post v-show="postType === `channel`" v-for="post in channelPosts" class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconPseudonyms></IconPseudonyms></template>
-            <template #full-name> {{ post.pseudonymName }} </template>
+            <template #pfp> <IconChannels></IconChannels></template>
+            <template #full-name> {{ post.channelName }} </template>
             <template #button>
-              <button @click="() => {follow('pseudonym', post.pseudonymName);}" class="my-2 mx-2 btn btn-primary">Follow</button>
+              <button @click="() => {follow('channel', post.channelName);}" class="my-2 mx-2 btn btn-primary">Follow</button>
             </template>
           </UserProfile>          
         </template>
@@ -146,7 +146,7 @@ async function follow(followType, followed) {
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
         <h3>Filters</h3>
-          <Filters :options="['User posts', 'Pseudonym posts']" id="Type" @change="changePostType">
+          <Filters :options="['User posts', 'Channel posts']" id="Type" @change="changePostType">
             <template #header>Type</template>
           </Filters>
       </div>

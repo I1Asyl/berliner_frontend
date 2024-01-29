@@ -10,14 +10,14 @@ import Logo from './components/Logo.vue';
 import IconJoin from './components/icons/IconJoin.vue';
 import IconFriends from './components/icons/IconFriends.vue';
 import IconUser from './components/icons/IconUser.vue';
-import IconPseudonyms from './components/icons/IconPseudonyms.vue';
+import IconChannels from './components/icons/IconChannels.vue';
 import IconChat from './components/icons/IconChat.vue';
 import IconFeed from './components/icons/IconFeed.vue';
 
 import Login from './components/Login.vue';
 import Registration from './components/Registration.vue';
 import Following from './components/Following.vue';
-import MyPseudonyms from './components/MyPseudonyms.vue';
+import MyChannels from './components/MyChannels.vue';
 import SomethingNew from './components/SomethingNew.vue';
 
 
@@ -26,8 +26,8 @@ const showLogin = ref(false);
 const showRegistration = ref(false);
 
 const data = {
-  partNames:["Following", "My pseudonyms" ,"Something new"], 
-  icons: [IconFeed, IconPseudonyms ,IconFriends],
+  partNames:["Following", "My channels" ,"Something new"], 
+  icons: [IconFeed, IconChannels ,IconFriends],
   active: [ref(true), ref(false), ref(false), ref(false), ref(false)],
   user: reactive({
     id: 0,
@@ -136,7 +136,7 @@ onMounted(() => {
     </div>
 
     <Following :user="data.user" v-if="data.active[0].value"/>
-    <MyPseudonyms :user="data.user" v-if="data.active[1].value"/>
+    <MyChannels :user="data.user" v-if="data.active[1].value"/>
     <SomethingNew :user="data.user" v-if="data.active[2].value"/>
 
   </div>

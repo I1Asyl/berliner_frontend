@@ -4,18 +4,18 @@ import Popup from './Popup.vue';
 
 
 const form = reactive({
-    pseudonymName: '', 
-    pseudonymDescription: '',
+    channelName: '', 
+    channelDescription: '',
 });
 
 const isError = ref(false);
 
 const errors = reactive({
-    pseudonymName: '', 
-    pseudonymDescription: '',
+    channelName: '', 
+    channelDescription: '',
 });
 
-async function createPseudonym() {
+async function createChannel() {
 
     let token = "";
   if (localStorage.hasOwnProperty("token")) {
@@ -24,7 +24,7 @@ async function createPseudonym() {
     for (let err in errors) {
         errors[err] = "";
     }
-    const responce = await fetch("http://127.0.0.1:8080/pseudonyms", {
+    const responce = await fetch("http://127.0.0.1:8080/channels", {
         method: "POST", 
         body: formToJson(), 
         headers: {
@@ -41,28 +41,28 @@ async function createPseudonym() {
 
 function formToJson(id) {
     return JSON.stringify({
-        pseudonymName: form.pseudonymName,
-        pseudonymDescription: form.pseudonymDescription
+        channelName: form.channelName,
+        channelDescription: form.channelDescription
      })
 }  
 
 </script>
 <template>
     <Popup @close="$emit('close')">
-        <template #name>Create a pseudonym</template>
+        <template #name>Create a channel</template>
         <template #content>
                 <form method="post" class="form-wrapper" action="">
-                    <small v-if="isError">Pseudonym name is not correct</small>
+                    <small v-if="isError">Channel name is not correct</small>
 
                     <div class="form-group">
-                        <label for="pseudonym-name">Pseudonym name</label>
-                        <input v-model="form.pseudonymName" type="text" class="form-control" placeholder="Pseudonym name">
+                        <label for="channel-name">Channel name</label>
+                        <input v-model="form.channelName" type="text" class="form-control" placeholder="Channel name">
                     </div>
                     <div class="form-group">
-                        <label for="password">Pseudonym description</label>
-                        <textarea class="form-control" v-model="form.pseudonymDescription" rows="4"></textarea>
+                        <label for="password">Channel description</label>
+                        <textarea class="form-control" v-model="form.channelDescription" rows="4"></textarea>
                     </div>
-                    <button type="button" @click="createPseudonym()" class="btn btn-primary">Create pseudonym</button>  
+                    <button type="button" @click="createChannel()" class="btn btn-primary">Create channel</button>  
             </form>
         </template>
     </Popup>

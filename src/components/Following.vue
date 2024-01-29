@@ -2,7 +2,7 @@
 <script setup>
 import {onBeforeMount, ref} from 'vue';
 import IconUser from './icons/IconUser.vue';
-import IconPseudonyms from './icons/IconPseudonyms.vue';
+import IconChannels from './icons/IconChannels.vue';
 import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
@@ -11,13 +11,13 @@ const props = defineProps(['user']);
 const postType = ref("user");
 const postVis = ref("public");
 const content = ref("");
-const pseudonymPosts = ref();
+const channelPosts = ref();
 const userPosts = ref();
 const contentType = ref("private");
 
 function changePostType(option) {
-  if (option === "Pseudonym posts") {
-    postType.value = "pseudonym";
+  if (option === "Channel posts") {
+    postType.value = "channel";
   } 
   else {
     postType.value = "user";
@@ -51,20 +51,20 @@ async function getUserPosts() {
 
 }
 
-async function getPseudonymPosts() {
+async function getChannelPosts() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
     const response = await fetch("http://127.0.0.1:8080/post?" + new URLSearchParams({
-    author: "pseudonym",
+    author: "channel",
     }),{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
         }
     });
-    pseudonymPosts.value = await response.json();
+    channelPosts.value = await response.json();
 }
 
 function post() {
@@ -123,7 +123,7 @@ function formToJson() {
       authorType: "user", 
      })
 }  
-onBeforeMount(() => {getUserPosts(); getPseudonymPosts();});
+onBeforeMount(() => {getUserPosts(); getChannelPosts();});
 </script>
 <template>
 
@@ -180,14 +180,14 @@ onBeforeMount(() => {getUserPosts(); getPseudonymPosts();});
         </template>
         <template #content>{{ post.content }} </template>
         </Post>
-        <Post v-show="postType === `pseudonym` && ((`public` === postVis && post.isPublic) || (`private` === postVis && !post.isPublic))" v-for="post in pseudonymPosts" class="border border-light border-3 rounded pb-3">
+        <Post v-show="postType === `channel` && ((`public` === postVis && post.isPublic) || (`private` === postVis && !post.isPublic))" v-for="post in channelPosts" class="border border-light border-3 rounded pb-3">
         <template #header> 
           <UserProfile>
-            <template #pfp> <IconPseudonyms></IconPseudonyms></template>
-            <template #full-name> {{ post.pseudonymName }} </template>
+            <template #pfp> <IconChannels></IconChannels></template>
+            <template #full-name> {{ post.channelName }} </template>
             <template #button>
-              <button v-if="post.pseudonymLeaderId !== user.id" @click="() => {unfollow('pseudonym', post.pseudonymName); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
-              <button v-if="post.pseudonymLeaderId === user.id" @click="() => {deletePost('pseudonym', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>            
+              <button v-if="post.channelLeaderId !== user.id" @click="() => {unfollow('channel', post.channelName); }" class="my-2 mx-2 btn btn-secondary">Unfollow</button>
+              <button v-if="post.channelLeaderId === user.id" @click="() => {deletePost('channel', post.id); }" class="my-2 mx-2 btn btn-danger">Delete post</button>            
             </template>
           </UserProfile>          
         </template>
@@ -198,7 +198,7 @@ onBeforeMount(() => {getUserPosts(); getPseudonymPosts();});
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
         <h3>Filters</h3>
-          <Filters :options="['User posts', 'Pseudonym posts']" id="Type" @change="changePostType">
+          <Filters :options="['User posts', 'Channel posts']" id="Type" @change="changePostType">
             <template #header>Type</template>
           </Filters>
           <Filters :options="['Public', 'Private']" id="Status" @change="changePostVis">

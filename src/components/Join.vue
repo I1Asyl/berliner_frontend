@@ -5,21 +5,21 @@ import UserProfile from './UserProfile.vue';
 import Post from './Post.vue';
 import Filters from './Filters.vue';
 import {onBeforeMount, reactive, ref} from 'vue'
-import CreatePseudonym from './CreatePseudonym.vue';
+import CreateChannel from './CreateChannel.vue';
 const data = ref("")
-const pseudonymForm = ref(false);
+const channelForm = ref(false);
 
 onBeforeMount(() => {
-    getPseudonyms();
+    getChannels();
 })
 
-async function getPseudonyms() {
+async function getChannels() {
     let token = "";
     if (localStorage.hasOwnProperty("token")) {
         token = "Bearer " + localStorage.getItem("token");
     } 
     console.log(token);   
-    fetch("http://127.0.0.1:8080/myPseudonyms",{ 
+    fetch("http://127.0.0.1:8080/myChannels",{ 
         method: 'GET', 
         headers: {
             "Authorization": token,
@@ -49,13 +49,13 @@ async function getPseudonyms() {
     </div>   
     <div class="col-sm-12 col-lg-3">
       <div class="border border-light border-3 rounded px-3 py-3">
-        <h3>Pseudonyms</h3>
+        <h3>Channels</h3>
         <ul>
-            <li v-for="pseudonyms in data.pseudonyms">{{ pseudonyms.PseudonymName }}</li>
+            <li v-for="channels in data.channels">{{ channels.ChannelName }}</li>
         </ul>
-        <button class="btn btn-primary" @click="pseudonymForm=true;">Create a pseudonym</button>
+        <button class="btn btn-primary" @click="channelForm=true;">Create a channel</button>
       </div>
     </div>    
-    {{ pseudonymForm.value }}
-    <CreatePseudonym @close="pseudonymForm=false" v-if="pseudonymForm"></CreatePseudonym>
+    {{ channelForm.value }}
+    <CreateChannel @close="channelForm=false" v-if="channelForm"></CreateChannel>
     </template>
