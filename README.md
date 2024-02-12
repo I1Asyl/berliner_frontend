@@ -2,7 +2,9 @@
 
 This application is a frontend source code of an application called Berliner.
 
-
+## Prerequisites
+- Node.JS 21
+- npm 10
 
 ## Project Setup
 
